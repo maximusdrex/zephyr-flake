@@ -12,8 +12,17 @@
   };
 
   outputs = { self, nixpkgs, zephyr, zephyr-nix }: {
-    devShells.x86_64-linux.default = nixpkgs.legacyPackages.x86_64-linux.mkShell {
-      buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
+    devShells.x86_64-linux = let
+      pkgs = import nixpkgs {
+        system = "x86_64-linux";
+        config = {
+          allowUnfree = true;
+          segger-jlink.acceptLicense = true;
+        };
+      };
+    in {
+    default = pkgs.mkShell {
+      buildInputs = with pkgs; [
         (python3.withPackages (python-pkgs: with python-pkgs; [
           anytree
           canopen
@@ -70,6 +79,7 @@
         hidrd
         gitlint
         mcuboot-imgtool
+        nrfutil
 
         (zephyr-nix.packages.x86_64-linux.sdk-0_17.override {
           targets = [
@@ -86,5 +96,6 @@
         banner "Zephyr SDK"
       '';
     };
+    }; 
   };
 }
