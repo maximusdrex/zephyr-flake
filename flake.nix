@@ -16,6 +16,9 @@
       pkgs = import nixpkgs {
         system = "x86_64-linux";
         config = {
+          permittedInsecurePackages = [
+            "segger-jlink-qt4-874"
+          ];
           allowUnfree = true;
           segger-jlink.acceptLicense = true;
         };
@@ -62,6 +65,7 @@
           yamllint
           zcbor
           jsonschema
+          click
         ]))
         banner
         dpkg
@@ -75,11 +79,18 @@
         pkg-config
         glib
         libpcap
+        SDL2
         pahole
         hidrd
         gitlint
         mcuboot-imgtool
         nrfutil
+        nrf-command-line-tools
+        rustc
+        cargo
+        protobuf
+        
+        gcc_multi
 
         (zephyr-nix.packages.x86_64-linux.sdk-0_17.override {
           targets = [
